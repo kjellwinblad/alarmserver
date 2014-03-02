@@ -36,8 +36,10 @@ static int alarm_active = 0;
 
 static void catch_alarm (int sig) {
   if(alarm_active){
-    printf("HELLO AT TIME\n");
-    system("./onalarm.sh &");
+    int commandReturn = system("./onalarm.sh &");
+    if(commandReturn){
+        printf("./onalarm.sh & gave nonzero exit code: %d \n", commandReturn);
+    }
   }
   signal (sig, catch_alarm);
 }
@@ -78,7 +80,6 @@ static void activate_alarm(){
 	localTime->tm_min*60 -
 	localTime->tm_sec;
     }
-    printf("ALARM IN %d seconds\n", secondsToAlarm);
     alarm_active = 1;
     alarm (secondsToAlarm);
 }
